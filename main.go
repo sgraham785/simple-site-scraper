@@ -11,20 +11,21 @@ import (
 	"github.com/gocolly/colly"
 )
 
-const sitesDir = "sites/"
-
 func main() {
 	var siteURL string
+	var outputPath string
 	flag.StringVar(&siteURL, "s", "", "Site domain to scrape")
+	flag.StringVar(&outputPath, "o", "./scrapes", "Path for scraped outputs")
 	flag.Parse()
 
-	// Sanitize -s
+	// Sanitize flags
 	siteURL = strings.TrimPrefix(siteURL, "https://")
 	siteURL = strings.TrimPrefix(siteURL, "http://")
 	siteURL = strings.ReplaceAll(siteURL, "/", "")
+	outputPath = strings.TrimRight(outputPath, "/")
 
 	// Create Directories
-	sitePath := filepath.Join(sitesDir, siteURL)
+	sitePath := filepath.Join(outputPath, siteURL)
 	os.MkdirAll(sitePath, os.ModePerm)
 
 	// Instantiate default collector
@@ -41,7 +42,7 @@ func main() {
 
 		// Get the HTML
 		html, err := e.DOM.Html()
-		err = ioutil.WriteFile(sitesDir+siteURL+"/"+fName+".html", []byte(html), 0644)
+		err = ioutil.WriteFile(outputPath+"/"+siteURL+"/"+fName+".html", []byte(html), 0644)
 		if err != nil {
 			panic(err)
 		}
