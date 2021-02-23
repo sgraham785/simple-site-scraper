@@ -1,4 +1,4 @@
-module github.com/sgraham785/scraper
+module github.com/sgraham785/simple-site-scraper
 
 go 1.14
 
